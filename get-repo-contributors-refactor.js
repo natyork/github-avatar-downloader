@@ -17,8 +17,22 @@ function getRepoContributors(repoOwner, repoName, cb) { // convention for asynch
     if (err) {
       throw err;
     }
+
+    var dir = "./avatars/";
+    fs.stat(dir, function(err, stats) {
+      if (err || !stats.isDirectory()) {
+        fs.mkdir(dir, function(err){
+          if(err){
+            throw err;
+          }
+        });
+      }
+    });
+
+    console.log(dir);
+
     body.map(function (element, index, array){
-      var fileP = "tmp/" + element.login + ".jpg"
+      var fileP = dir + element.login + ".jpg"
       cb(element.avatar_url, fileP);
     });
   });
@@ -33,6 +47,8 @@ function downloadImageByURL(url, filePath) {
 
   fileContent.pipe(fs.createWriteStream(filePath));
 }
+
+
 
 
 
